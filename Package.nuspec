@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Containers</id>
+    <version>0.8.0</version>
+    <authors>Joe Cisar</authors>
+    <owners>Joe Cisar</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple DI tool for WCF Service and WebAPI applications.</description>
+    <releaseNotes>Removed dependency of Ninject</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags></tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="\Containers\bin\Release\Containers.dll" target="lib\Containers.dll" />
+  </files>
+</package>

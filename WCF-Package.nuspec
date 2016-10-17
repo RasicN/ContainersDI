@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Containers.WCF</id>
+    <version>0.1.2</version>
+    <authors>Joe Cisar</authors>
+    <owners>Joe Cisar</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WCF helper package for Containers base package.</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags></tags>
+    <dependencies>
+      <dependency id="Containers" version="0.8.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ServiceModel" />
+      <frameworkAssembly assemblyName="System.ServiceModel.Activation" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="\Containers.WCF\ContainerConfig.cs.pp" target="content" />
+  </files>
+</package>
