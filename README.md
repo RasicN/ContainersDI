@@ -22,6 +22,7 @@ Available config settings:
 Supports all of the above config extension methods as well as:
 - `selfConfig.ResolveConstructorArgumentUsing<ImplementationType>("{parameterName}")`  Assigns an ImplemenationType to a parameter
 
+*Right now Containers uses Ninject version 3.2.2, however it is wrapped up into the package .dll so it is not considered a dependency from Nuget's perspective.  The idea is that the IoC tool doesn't really matter and it can be easily swapped out if needed.
 
 # WebAPI
 Create a `ContainerConfig.cs` or `Install-Package Containers.WebAPI`.
