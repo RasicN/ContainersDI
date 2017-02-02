@@ -2,11 +2,11 @@
 <package >
   <metadata>
     <id>Containers</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <authors>Joe Cisar</authors>
     <owners>Joe Cisar</owners>
     <description>A simple DI tool for WCF Service and WebAPI applications.</description>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Added thead scope and made transient scope the default.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <licenseUrl>https://github.com/RasicN/ContainersDI/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/RasicN/ContainersDI</projectUrl>

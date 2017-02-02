@@ -9,5 +9,6 @@ namespace Containers
         Type To { get; set; }
         object ToInstance { get; set; }
         string ConfigName { get; set; }
+        bool IsThreadInstance { get; set; }
     }
 }

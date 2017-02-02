@@ -65,16 +65,30 @@ namespace Containers
                     }
                 }
 
-                if (config.IsSingleton)
-                {
-                    binding.InSingletonScope();
-                }
+                SetScope(config, binding);
+
                 if (config.ConfigName != null)
                 {
                     binding.Named(config.ConfigName);
                 }
             }
             return Kernel;
+        }
+
+        private static void SetScope(IConfig config, IBindingWhenInNamedWithOrOnSyntax<object> binding)
+        {
+            if (config.IsSingleton)
+            {
+                binding.InSingletonScope();
+            }
+            else if (config.IsThreadInstance)
+            {
+                binding.InThreadScope();
+            }
+            else
+            {
+                binding.InTransientScope();
+            }
         }
 
         private IBindingWhenInNamedWithOrOnSyntax<object> ToInstanceBinding(IConfig config)

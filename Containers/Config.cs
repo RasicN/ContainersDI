@@ -63,6 +63,7 @@ namespace Containers
         public object ToInstance { get; set; }
 
         public string ConfigName { get; set; }
+        public bool IsThreadInstance { get; set; }
 
         private void SetConfigNameDefault()
         {
@@ -75,6 +76,14 @@ namespace Containers
         public static ConfigBase AsSingleton(this ConfigBase configBase)
         {
             configBase.IsSingleton = true;
+            configBase.IsThreadInstance = false;
+            return configBase;
+        }
+
+        public static ConfigBase AsThreadInstance(this ConfigBase configBase)
+        {
+            configBase.IsSingleton = false;
+            configBase.IsThreadInstance = true;
             return configBase;
         }
 
