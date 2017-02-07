@@ -134,5 +134,22 @@ namespace ContainersTests
             Assert.IsNotNull(container.GetBinding<ITest3>());
             Assert.IsNotNull(container.GetBinding<ITest4>());
         }
+
+        [TestMethod]
+        public void CanOverwriteConfig()
+        {
+            // Arrange
+            var container = new Container()
+                .AddConfig(new Config<ITest1, Test1>());
+
+            // Act
+            container.OverwriteConfig(new Config<ITest1, Test1A>());
+
+            // Assert
+            var test1 = container.GetBinding<ITest1>();
+            var expectedTestString = new Test1A().TestString;
+
+            Assert.AreEqual(expectedTestString, test1.TestString);
+        }
     }
 }

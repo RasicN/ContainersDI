@@ -26,7 +26,7 @@ namespace Containers
 
         public T GetBinding<T>(string name = null)
         {
-            var config =_configs.First(x => x.Bind == typeof(T));
+            var config = _configs.First(x => x.Bind == typeof(T));
             
             if (string.IsNullOrEmpty(name))
             {
@@ -40,6 +40,20 @@ namespace Containers
         {
             _configs.Add(config);
             CreateBindings(new List<IConfig> {config});
+
+            return this;
+        }
+
+        public Container OverwriteConfig(IConfig config, string name = null)
+        {
+            if (config.To != null)
+            {
+                Kernel.Rebind(config.Bind).To(config.To);
+            }
+            else
+            {
+                Kernel.Rebind(config.Bind).ToMethod(x => config.ToInstance);
+            }
 
             return this;
         }
