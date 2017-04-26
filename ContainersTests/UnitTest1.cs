@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Web.Http;
 using Containers;
@@ -10,6 +11,12 @@ namespace ContainersTests
     [TestClass]
     public class UnitTest1
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            Container.Initialize(new List<IConfig>());
+        }
+
         [TestMethod]
         public void BindingDictionaryReturnsImplementationOfPassedInConfig()
         {
@@ -23,32 +30,29 @@ namespace ContainersTests
             };
 
             // Act
-            var container = new Container(configs);
+            Container.Initialize(configs);
 
             // Assert
-            var test1 = container.GetBinding<ITest1>();
+            var test1 = Container.GetBinding<ITest1>();
             Assert.IsNotNull(test1);
             Assert.IsFalse(string.IsNullOrWhiteSpace(test1.TestString));
-            Assert.IsNotNull(container.GetBinding<ITest2>());
-            Assert.IsNotNull(container.GetBinding<ITest3>());
-            Assert.IsNotNull(container.GetBinding<ITest4>());
+            Assert.IsNotNull(Container.GetBinding<ITest2>());
+            Assert.IsNotNull(Container.GetBinding<ITest3>());
+            Assert.IsNotNull(Container.GetBinding<ITest4>());
         }
 
         [TestMethod]
         public void CanAddBinding()
         {
-            // Arrange
-            var container = new Container();
-            
             // Act
-            container.AddConfig(new Config<ITest1, Test1>());
-            container.AddConfig(new Config<ITest2>(new Test2()));
+            Container.AddConfig(new Config<ITest1, Test1>());
+            Container.AddConfig(new Config<ITest2>(new Test2()));
 
             // Assert
-            var test1 = container.GetBinding<ITest1>();
+            var test1 = Container.GetBinding<ITest1>();
             Assert.IsNotNull(test1);
             Assert.IsFalse(string.IsNullOrWhiteSpace(test1.TestString));
-            Assert.IsNotNull(container.GetBinding<ITest2>());
+            Assert.IsNotNull(Container.GetBinding<ITest2>());
         }
 
         [TestMethod]
@@ -63,10 +67,10 @@ namespace ContainersTests
                 new Config<ITest4>(new Test4()).AsSingleton()
             };
 
-            var container = new WebApiContainer(configs);
+            var Container = new WebApiContainer(configs);
             
             // Act
-            container.SetDependencyResolver();
+            Container.SetDependencyResolver();
 
             // Assert
             Assert.IsNotNull(GlobalConfiguration.Configuration.DependencyResolver);
@@ -83,11 +87,11 @@ namespace ContainersTests
             };
 
             // Act
-            var container = new Container(configs);
+            Container.Initialize(configs);
 
             // Assert
-            var test1 = container.GetBinding<ITest1>("Test1");
-            var test1A = container.GetBinding<ITest1>("asdf");
+            var test1 = Container.GetBinding<ITest1>("Test1");
+            var test1A = Container.GetBinding<ITest1>("asdf");
 
             Assert.AreEqual("Hello World", test1.TestString);
             Assert.AreEqual("Hello World From Test1 A", test1A.TestString);
@@ -108,9 +112,9 @@ namespace ContainersTests
             };
 
             // Act
-            var container = new Container(configs);
+            Container.Initialize(configs);
 
-            var test5 = container.GetBinding<Test5>();
+            var test5 = Container.GetBinding<Test5>();
 
             // Assert
             Assert.IsInstanceOfType(test5.Test1, typeof(Test1));
@@ -121,32 +125,30 @@ namespace ContainersTests
         [TestMethod]
         public void CanChainAddBindings()
         {
-            var container = new Container()
-                .AddConfig(new Config<ITest1, Test1>())
-                .AddConfig(new Config<ITest2>(new Test2()))
-                .AddConfig(new Config<ITest3, Test3>().AsSingleton())
-                .AddConfig(new Config<ITest4>(new Test4()).AsSingleton());
+            Container.AddConfig(new Config<ITest1, Test1>());
+            Container.AddConfig(new Config<ITest2>(new Test2()));
+            Container.AddConfig(new Config<ITest3, Test3>().AsSingleton());
+            Container.AddConfig(new Config<ITest4>(new Test4()).AsSingleton());
 
-            var test1 = container.GetBinding<ITest1>();
+            var test1 = Container.GetBinding<ITest1>();
             Assert.IsNotNull(test1);
             Assert.IsFalse(string.IsNullOrWhiteSpace(test1.TestString));
-            Assert.IsNotNull(container.GetBinding<ITest2>());
-            Assert.IsNotNull(container.GetBinding<ITest3>());
-            Assert.IsNotNull(container.GetBinding<ITest4>());
+            Assert.IsNotNull(Container.GetBinding<ITest2>());
+            Assert.IsNotNull(Container.GetBinding<ITest3>());
+            Assert.IsNotNull(Container.GetBinding<ITest4>());
         }
 
         [TestMethod]
         public void CanOverwriteConfig()
         {
             // Arrange
-            var container = new Container()
-                .AddConfig(new Config<ITest1, Test1>());
+           Container.AddConfig(new Config<ITest1, Test1>());
 
             // Act
-            container.OverwriteConfig(new Config<ITest1, Test1A>());
+            Container.OverwriteConfig(new Config<ITest1, Test1A>());
 
             // Assert
-            var test1 = container.GetBinding<ITest1>();
+            var test1 = Container.GetBinding<ITest1>();
             var expectedTestString = new Test1A().TestString;
 
             Assert.AreEqual(expectedTestString, test1.TestString);

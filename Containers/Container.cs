@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
@@ -9,22 +10,29 @@ using Ninject.Syntax;
 
 namespace Containers
 {
-    public class Container
+    public static class Container
     {
-        private readonly ICollection<IConfig> _configs;
-        internal StandardKernel Kernel;
-        public Container(ICollection<IConfig> configs)
+        private static ICollection<IConfig> _configs = new List<IConfig>();
+        internal static StandardKernel Kernel;
+
+        //public Container(ICollection<IConfig> configs)
+        //{
+        //    _configs = configs;
+        //    Kernel = CreateBindings(configs);
+        //}
+
+        //public Container()
+        //{
+        //    _configs = new List<IConfig>();
+        //}
+        public static void Initialize(ICollection<IConfig> configs)
         {
+            Kernel = null;
             _configs = configs;
-            Kernel = CreateBindings(configs);
+            CreateBindings(configs);
         }
 
-        public Container()
-        {
-            _configs = new List<IConfig>();
-        }
-
-        public T GetBinding<T>(string name = null)
+        public static T GetBinding<T>(string name = null)
         {
             var config = _configs.First(x => x.Bind == typeof(T));
             
@@ -36,15 +44,13 @@ namespace Containers
             return (T)Kernel.Get(config.Bind, name);
         }
 
-        public Container AddConfig(IConfig config)
+        public static void AddConfig(IConfig config)
         {
             _configs.Add(config);
             CreateBindings(new List<IConfig> {config});
-
-            return this;
         }
 
-        public Container OverwriteConfig(IConfig config, string name = null)
+        public static void OverwriteConfig(IConfig config, string name = null)
         {
             if (config.To != null)
             {
@@ -54,11 +60,9 @@ namespace Containers
             {
                 Kernel.Rebind(config.Bind).ToMethod(x => config.ToInstance);
             }
-
-            return this;
         }
 
-        private StandardKernel CreateBindings(ICollection<IConfig> configuration)
+        private static void CreateBindings(ICollection<IConfig> configuration)
         {
             if (Kernel == null)
             {
@@ -86,7 +90,6 @@ namespace Containers
                     binding.Named(config.ConfigName);
                 }
             }
-            return Kernel;
         }
 
         private static void SetScope(IConfig config, IBindingWhenInNamedWithOrOnSyntax<object> binding)
@@ -105,38 +108,46 @@ namespace Containers
             }
         }
 
-        private IBindingWhenInNamedWithOrOnSyntax<object> ToInstanceBinding(IConfig config)
+        private static IBindingWhenInNamedWithOrOnSyntax<object> ToInstanceBinding(IConfig config)
         {
             return Kernel.Bind(config.Bind).ToMethod(x => config.ToInstance);
         }
 
-        private IBindingWhenInNamedWithOrOnSyntax<object> BasicBinding(IConfig config)
+        private static IBindingWhenInNamedWithOrOnSyntax<object> BasicBinding(IConfig config)
         {
             return Kernel.Bind(config.Bind).To(config.To);
         }
     }
 
-    public class WcfContainer : Container
+    public class WcfContainer
     {
-        public WcfContainer(ICollection<IConfig> configs) : base(configs)
+        public WcfContainer()
         {
+        }
+
+        public WcfContainer (ICollection<IConfig> configs)
+        {
+            Container.Initialize(configs);
         }
 
         public ServiceHost CreateServiceHost(Type serviceType, Uri[] baseAddress)
         {
-            return new Ninject.NInjectServiceHost(Kernel, serviceType, baseAddress);
+            return new Ninject.NInjectServiceHost(Container.Kernel, serviceType, baseAddress);
         }
     }
 
-    public class WebApiContainer : Container
+    public class WebApiContainer
     {
-        public WebApiContainer(ICollection<IConfig> configs) : base(configs)
+        public WebApiContainer() { }
+
+        public WebApiContainer(ICollection<IConfig> configs)
         {
+            Container.Initialize(configs);
         }
 
         public void SetDependencyResolver()
         {
-            GlobalConfiguration.Configuration.DependencyResolver = new Ninject.NinjectDependencyResolver(Kernel);
+            GlobalConfiguration.Configuration.DependencyResolver = new Ninject.NinjectDependencyResolver(Container.Kernel);
         }
     }
 }
