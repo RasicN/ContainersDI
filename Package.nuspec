@@ -6,7 +6,7 @@
     <authors>Joe Cisar</authors>
     <owners>Joe Cisar</owners>
     <description>A simple DI tool for WCF Service and WebAPI applications.</description>
-    <releaseNotes>Made Containers Static</releaseNotes>
+    <releaseNotes>Made Containers Static **BREAKING CHANGE FROM 1.0**</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <licenseUrl>https://github.com/RasicN/ContainersDI/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/RasicN/ContainersDI</projectUrl>
