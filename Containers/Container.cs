@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using Ninject;
 using Ninject.Syntax;
+using Ninject.Web.Common;
 
 namespace Containers
 {
@@ -94,6 +94,8 @@ namespace Containers
 
         private static void SetScope(IConfig config, IBindingWhenInNamedWithOrOnSyntax<object> binding)
         {
+            binding.InRequestScope();
+
             if (config.IsSingleton)
             {
                 binding.InSingletonScope();
@@ -102,7 +104,7 @@ namespace Containers
             {
                 binding.InThreadScope();
             }
-            else
+            else if (config.IsTransientScope)
             {
                 binding.InTransientScope();
             }

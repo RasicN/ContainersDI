@@ -64,6 +64,7 @@ namespace Containers
 
         public string ConfigName { get; set; }
         public bool IsThreadInstance { get; set; }
+        public bool IsTransientScope { get; set; }
 
         private void SetConfigNameDefault()
         {
@@ -76,6 +77,7 @@ namespace Containers
         public static ConfigBase AsSingleton(this ConfigBase configBase)
         {
             configBase.IsSingleton = true;
+            configBase.IsTransientScope = false;
             configBase.IsThreadInstance = false;
             return configBase;
         }
@@ -83,7 +85,16 @@ namespace Containers
         public static ConfigBase AsThreadInstance(this ConfigBase configBase)
         {
             configBase.IsSingleton = false;
+            configBase.IsTransientScope = false;
             configBase.IsThreadInstance = true;
+            return configBase;
+        }
+
+        public static ConfigBase AsTransientInstance(this ConfigBase configBase)
+        {
+            configBase.IsSingleton = false;
+            configBase.IsThreadInstance = false;
+            configBase.IsTransientScope = true;
             return configBase;
         }
 
