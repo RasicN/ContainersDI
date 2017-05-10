@@ -1,3 +1,5 @@
+# For Version >= 2.0.0
+
 There are 3 Total Nuget packages in this Repo.
 # Containers - Core application
 This is a tool to simplify dependency injection and IoC's.  
@@ -44,6 +46,9 @@ protected void Application_Start()
   // ...
   // ...
   new WebApiContainer(ContainerConfig.Configs).SetDependencyResolver();
+  // or
+  Container.Initialize(ContainerConfig.Configs);
+  new WebApiContainer().SetDependencyResolver();
 }
 ```
 
@@ -63,7 +68,12 @@ public class ContainerConfig : ServiceHostFactory
 
   protected override ServiceHost CreateServiceHost(Type serviceType, Uri[] baseAddress)
   {
-      return new WcfContainer(Configs).CreateServiceHost(serviceType, baseAddress);
+        return new WcfContainer(Configs).CreateServiceHost(serviceType, baseAddress);
+        
+        // or
+        
+        Container.Initialize(ContainerConfig.Configs);
+        return new WcfContainer().CreateServiceHost(serviceType, baseAddress);
   }
 }
 ```
