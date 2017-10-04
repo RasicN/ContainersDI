@@ -74,7 +74,7 @@ namespace Containers
             }
         }
 
-        public class NinjectDependencyResolver : NinjectDependencyScope, IDependencyResolver
+        public class NinjectDependencyResolver : NinjectDependencyScope, IDependencyResolver, System.Web.Mvc.IDependencyResolver
         {
             private readonly IKernel _kernel;
 

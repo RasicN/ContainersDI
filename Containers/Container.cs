@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
+using System.Web.Mvc;
 using Ninject;
 using Ninject.Syntax;
 using Ninject.Web.Common;
@@ -15,16 +16,7 @@ namespace Containers
         private static ICollection<IConfig> _configs = new List<IConfig>();
         internal static StandardKernel Kernel;
 
-        //public Container(ICollection<IConfig> configs)
-        //{
-        //    _configs = configs;
-        //    Kernel = CreateBindings(configs);
-        //}
-
-        //public Container()
-        //{
-        //    _configs = new List<IConfig>();
-        //}
+        
         public static void Initialize(ICollection<IConfig> configs)
         {
             Kernel = null;
@@ -150,6 +142,39 @@ namespace Containers
         public void SetDependencyResolver()
         {
             GlobalConfiguration.Configuration.DependencyResolver = new Ninject.NinjectDependencyResolver(Container.Kernel);
+        }
+    }
+
+    public class MvcContainer
+    {
+        public MvcContainer() { }
+
+        public MvcContainer(ICollection<IConfig> configs)
+        {
+            Container.Initialize(configs);
+        }
+
+        public void SetDependencyResolver()
+        {
+            DependencyResolver.SetResolver(new Ninject.NinjectDependencyResolver(Container.Kernel));
+        }
+    }
+
+    public class WebContainer
+    {
+        public WebContainer() { }
+
+        public WebContainer(ICollection<IConfig> configs)
+        {
+            Container.Initialize(configs);
+        }
+
+        public void SetDependencyResolver()
+        {
+            var configurationDependencyResolver = new Ninject.NinjectDependencyResolver(Container.Kernel);
+
+            GlobalConfiguration.Configuration.DependencyResolver = configurationDependencyResolver;
+            DependencyResolver.SetResolver(configurationDependencyResolver);
         }
     }
 }
