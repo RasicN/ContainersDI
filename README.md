@@ -45,7 +45,16 @@ protected void Application_Start()
 {  
   // ...
   // ...
+  // Pick one of the following (I wouldn't do multiple though it will only cause issues if you don't have the necessary assemblies)
+  // WebAPI Only 
   new WebApiContainer(ContainerConfig.Configs).SetDependencyResolver();
+  
+  // MVC Only
+  new MvcContainer(ContainerConfig.Configs).SetDependencyResolver();
+
+  // WebAPI and MVC together
+  new WebContainer(ContainerConfig.Configs).SetDependencyResolver();
+  
   // or
   Container.Initialize(ContainerConfig.Configs);
   new WebApiContainer().SetDependencyResolver();
